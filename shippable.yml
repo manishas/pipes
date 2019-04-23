@@ -31,11 +31,8 @@ pipelines:
             - app
         execution:
           onExecute:
-            - echo "building..."
-            - echo $res_app_resourcePath
             - pushd $res_app_resourcePath/gitRepo
-            - ls -al
-            #- docker build -t app:latest .
+            - docker build -t app:latest .
 
             # - docker login -u $int_orbiteraArtifactory_username -p $int_orbiteraArtifactory_password $int_orbiteraArtifactory_url
             # - rt_ip=$(echo $int_orbiteraArtifactory_url | awk -F[/:] '{print $4}')
