@@ -60,7 +60,7 @@ pipelines:
             - build
         execution:
           onExecute:
-            - docker run app:latest --name test
+            - docker run --init --rm --name "build" app:latest bash -c "pwd"
 
       - name: push
         type: bash
