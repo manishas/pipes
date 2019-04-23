@@ -32,8 +32,9 @@ pipelines:
         execution:
           onExecute:
             - echo "building..."
-            - pwd
-            - ls -al
+            - echo $res_app_resourcePath
+            - pushd $res_app_resourcePath
+            - ls-al
             #- docker build -t app:latest .
 
             # - docker login -u $int_orbiteraArtifactory_username -p $int_orbiteraArtifactory_password $int_orbiteraArtifactory_url
