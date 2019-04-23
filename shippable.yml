@@ -78,7 +78,7 @@ pipelines:
             - artIp=$(echo $int_art_url | awk -F[/:] '{print $4}')
             - artPort=$(echo $int_art_url | awk -F[/:] '{print $5}')
             - echo "$artIp:$artPort"
-            - docker tag app:latest -t $artIp:$artPort/demo/app:$STEP_ID
+            - docker tag app:latest $artIp:$artPort/demo/app:$STEP_ID
             - docker push $artIp:$artPort/demo/app:$STEP_ID
 
       - name: job2
