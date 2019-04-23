@@ -33,7 +33,7 @@ pipelines:
           onExecute:
             - echo "building..."
             - echo $res_app_resourcePath
-            - pushd $res_app_resourcePath
+            - pushd $res_app_resourcePath/gitRepo
             - ls -al
             #- docker build -t app:latest .
 
