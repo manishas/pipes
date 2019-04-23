@@ -17,9 +17,10 @@ pipelines:
         setup:
           runtime:
             type: image
-            custom:
-              name: drydock/u16all
-              tag: master
+            image:
+             custom:
+               name: drydock/u16all
+               tag: master
         #   environmentVariables:
         #     normal:
         #       TEST_RESULTS_DIR: "$res_node_app_jfrog_resourcePath/shippable/testresults"
@@ -50,24 +51,26 @@ pipelines:
         setup:
           runtime:
             type: image
-            custom:
-              name: drydock/u16all
-              tag: master
+            image:
+             custom:
+               name: drydock/u16all
+               tag: master
         triggeredBy:
           steps:
             - build
         execution:
           onExecute:
-            - echo "testing...."
+            - docker run app:latest --name test
 
       - name: push
         type: bash
         setup:
           runtime:
             type: image
-            custom:
-              name: drydock/u16all
-              tag: master
+            image:
+             custom:
+               name: drydock/u16all
+               tag: master
         triggeredBy:
           steps:
             - test
@@ -80,9 +83,10 @@ pipelines:
         setup:
           runtime:
             type: image
-            custom:
-              name: drydock/u16all
-              tag: master
+            image:
+             custom:
+               name: drydock/u16all
+               tag: master
         triggeredBy:
           steps:
             - build
