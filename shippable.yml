@@ -1,7 +1,7 @@
 resources:
   - name: app
     type: gitRepo
-    repoPath: manishas/node_app_jfrog
+    repoPath: manishas/app
     configuration:
       integrationName: manishas_github
       branches:
