@@ -35,16 +35,16 @@ pipelines:
             - pushd $res_app_resourcePath/gitRepo
             - docker build -t app:latest .
 
-            # - docker login -u $int_orbiteraArtifactory_username -p $int_orbiteraArtifactory_password $int_orbiteraArtifactory_url
-            # - rt_ip=$(echo $int_orbiteraArtifactory_url | awk -F[/:] '{print $4}')
-            # - rt_port=$(echo $int_orbiteraArtifactory_url | awk -F[/:] '{print $5}')
-            # - echo $rt_ip
-            # - echo $rt_port
-            # - docker pull $rt_ip:$rt_port/docker-virtual/busybox:latest
-            # - ls $res_node_app_resourcePath/gitRepo
-            # - pushd $res_node_app_resourcePath/gitRepo
-            # - docker build -t $rt_ip:$rt_port/docker-virtual/alpine:$STEP_ID -f Dockerfile .
-            # - docker push $rt_ip:$rt_port/docker-virtual/alpine:$STEP_ID
+            - docker login -u $int_orbiteraArtifactory_username -p $int_orbiteraArtifactory_password $int_orbiteraArtifactory_url
+            - rt_ip=$(echo $int_orbiteraArtifactory_url | awk -F[/:] '{print $4}')
+            - rt_port=$(echo $int_orbiteraArtifactory_url | awk -F[/:] '{print $5}')
+            - echo $rt_ip
+            - echo $rt_port
+            - docker pull $rt_ip:$rt_port/docker-virtual/busybox:latest
+            - ls $res_node_app_resourcePath/gitRepo
+            - pushd $res_node_app_resourcePath/gitRepo
+            - docker build -t $rt_ip:$rt_port/docker-virtual/alpine:$STEP_ID -f Dockerfile .
+            - docker push $rt_ip:$rt_port/docker-virtual/alpine:$STEP_ID
 
       - name: test
         type: bash
@@ -72,12 +72,20 @@ pipelines:
              custom:
                name: drydock/u16all
                tag: master
+        requires:
+          integrations:
+            - art
         triggeredBy:
           steps:
             - test
         execution:
           onExecute:
-            - echo "pushing...."
+            - docker login -u $int_art_username -p $int_art_password $int_art_url
+            - artIp=$(echo $int_art_url | awk -F[/:] '{print $4}')
+            - artPort=$(echo $int_art_url | awk -F[/:] '{print $5}')
+            - echo "$artIp:$artPort"
+
+            #- docker push $artIp:$artPort/docker-virtual/alpine:$STEP_ID
 
       - name: job2
         type: bash
@@ -88,6 +96,7 @@ pipelines:
              custom:
                name: drydock/u16all
                tag: master
+
         triggeredBy:
           steps:
             - build
