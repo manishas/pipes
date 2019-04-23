@@ -21,12 +21,6 @@ pipelines:
              custom:
                name: drydock/u16all
                tag: master
-        #   environmentVariables:
-        #     normal:
-        #       TEST_RESULTS_DIR: "$res_node_app_jfrog_resourcePath/shippable/testresults"
-        #       CODE_COVERAGE_DIR: "$res_node_app_jfrog_resourcePath/shippable/codecoverage"
-        #       TESTS_LOC_DIR: "$res_node_app_jfrog_resourcePath/tests"
-        #       MOD_LOC: "$res_node_app_jfrog_resourcePath/node_modules/.bin"
         triggeredBy:
           resources:
             - app
@@ -35,16 +29,16 @@ pipelines:
             - pushd $res_app_resourcePath/gitRepo
             - docker build -t app:latest .
 
-            - docker login -u $int_orbiteraArtifactory_username -p $int_orbiteraArtifactory_password $int_orbiteraArtifactory_url
-            - rt_ip=$(echo $int_orbiteraArtifactory_url | awk -F[/:] '{print $4}')
-            - rt_port=$(echo $int_orbiteraArtifactory_url | awk -F[/:] '{print $5}')
-            - echo $rt_ip
-            - echo $rt_port
-            - docker pull $rt_ip:$rt_port/docker-virtual/busybox:latest
-            - ls $res_node_app_resourcePath/gitRepo
-            - pushd $res_node_app_resourcePath/gitRepo
-            - docker build -t $rt_ip:$rt_port/docker-virtual/alpine:$STEP_ID -f Dockerfile .
-            - docker push $rt_ip:$rt_port/docker-virtual/alpine:$STEP_ID
+            # - docker login -u $int_orbiteraArtifactory_username -p $int_orbiteraArtifactory_password $int_orbiteraArtifactory_url
+            # - rt_ip=$(echo $int_orbiteraArtifactory_url | awk -F[/:] '{print $4}')
+            # - rt_port=$(echo $int_orbiteraArtifactory_url | awk -F[/:] '{print $5}')
+            # - echo $rt_ip
+            # - echo $rt_port
+            # - docker pull $rt_ip:$rt_port/docker-virtual/busybox:latest
+            # - ls $res_node_app_resourcePath/gitRepo
+            # - pushd $res_node_app_resourcePath/gitRepo
+            # - docker build -t $rt_ip:$rt_port/docker-virtual/alpine:$STEP_ID -f Dockerfile .
+            # - docker push $rt_ip:$rt_port/docker-virtual/alpine:$STEP_ID
 
       - name: test
         type: bash
@@ -84,8 +78,8 @@ pipelines:
             - artIp=$(echo $int_art_url | awk -F[/:] '{print $4}')
             - artPort=$(echo $int_art_url | awk -F[/:] '{print $5}')
             - echo "$artIp:$artPort"
-
-            #- docker push $artIp:$artPort/docker-virtual/alpine:$STEP_ID
+            - docker tag app:latest -t $artIp:$artPort/demo/app:$STEP_ID
+            - docker push $artIp:$artPort/demo/app:$STEP_ID
 
       - name: job2
         type: bash
@@ -103,64 +97,3 @@ pipelines:
         execution:
           onExecute:
             - echo "job2...."
-
-
-
-# # Language setting http://docs.shippable.com/ci/languages/node/
-# language: node_js
-#
-# # Integrations are used to connect external resources to CI
-# # http://docs.shippable.com/integrations/overview/
-# integrations:
-#   # adding JFrog artifactory integration so that credentials are available to CI Job
-#   # http://docs.shippable.com/platform/integration/jfrog-artifactoryKey/#jfrog-artifactory-integration
-#   hub:
-#     - integrationName: docker_repo
-#       type: dockerRegistryLogin
-#
-# # use this to control what branches get built.
-# # http://docs.shippable.com/ci/advancedOptions/branches/
-# branches:
-#   only:
-#     - master
-#
-# # using pre-defined build variables
-# # full list http://docs.shippable.com/ci/advancedOptions/environmentVariables/
-# env:
-#   global:
-#     - TEST_RESULTS_DIR=$SHIPPABLE_REPO_DIR/shippable/testresults
-#     - CODE_COVERAGE_DIR=$SHIPPABLE_REPO_DIR/shippable/codecoverage
-#     - TESTS_LOC_DIR=$SHIPPABLE_REPO_DIR/tests
-#     - MOD_LOC=$SHIPPABLE_REPO_DIR/node_modules/.bin/
-#     - JFROG_ARTIFACTORY_IMG="node_app"
-#     - JFROG_ARTIFACTORY_REG=demoship-docker-local.jfrog.io # {account name}
-#
-# build:
-#   # http://docs.shippable.com/ci/shippableyml/#ci
-#   ci:
-#     # npm mirrors can sometimes be flacky, better to use shippable_retry
-#     # http://docs.shippable.com/ci/advancedOptions/retry/
-#     - npm install
-#     - mkdir -p $TEST_RESULTS_DIR && mkdir -p $CODE_COVERAGE_DIR
-#     - pushd $TESTS_LOC_DIR
-#     - $MOD_LOC/mocha --recursive "$TESTS_LOC_DIR/**/*.spec.js" -R mocha-junit-reporter --reporter-options mochaFile=$TEST_RESULTS_DIR/testresults.xml
-#     - $MOD_LOC/istanbul --include-all-sources cover -root "$SHIPPABLE_REPO_DIR/routes" $SHIPPABLE_REPO_DIR/node_modules/mocha/bin/_mocha -- -R spec-xunit-file --recursive "$TESTS_LOC_DIR/**/*.spec.js"
-#     - $MOD_LOC/istanbul report cobertura --dir $CODE_COVERAGE_DIR
-#     - popd
-#     - BASE_VER=$(shipctl get_resource_version_key curr_ver versionName)
-#     - CURR_VER=$(shipctl get_resource_version_key node_app_img_jf versionName)
-#     - *get_max_ver
-#     - NEW_VERSION="$(shipctl bump_version $HIGH_VER beta)"
-#     - echo $BASE_VER
-#     - echo $CURR_VER
-#     - echo $HIGH_VER
-#     - echo $NEW_VERSION
-#   # http://docs.shippable.com/ci/shippableyml/#post_ci
-#   post_ci:
-#     - docker build -t $JFROG_ARTIFACTORY_REG/$JFROG_ARTIFACTORY_IMG:$NEW_VERSION .
-#     - if [ "$IS_PULL_REQUEST" != true ]; then docker push $JFROG_ARTIFACTORY_REG/$JFROG_ARTIFACTORY_IMG:$NEW_VERSION; fi
-#
-#   #this will be ignored if you are not using Assembly Lines to trigger another job after ci
-#   on_success:
-#     - shipctl put_resource_state node_app_img_jf versionName $NEW_VERSION
-#
