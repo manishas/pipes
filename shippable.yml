@@ -9,6 +9,14 @@ resources:
     initialVersion:
       sha: master
 
+  - name: imageName
+    type: image
+    imageName: manishas/app_img
+    configuration:
+     integrationName: art
+    initialVersion:
+     imageTag: latest
+
 pipelines:
   - name: ci_pipeline
     steps:
@@ -55,19 +63,19 @@ pipelines:
              custom:
                name: drydock/u16all
                tag: master
-        requires:
-          integrations:
-            - art
         triggeredBy:
           steps:
             - test
         execution:
           onExecute:
+            - echo $int_art_username
+            - echo $int_art_password
+            - echo $int_art_url
             - docker login -u $int_art_username -p $int_art_password $int_art_url
-            - artIp=$(echo $int_art_url | awk -F[/:] '{print $4}')
-            - artPort=$(echo $int_art_url | awk -F[/:] '{print $5}')
-            - echo "$artIp:$artPort"
-            - docker tag app:latest $artIp:$artPort/demo/app:$STEP_ID
+            #- artIp=$(echo $int_art_url | awk -F[/:] '{print $4}')
+            #- artPort=$(echo $int_art_url | awk -F[/:] '{print $5}')
+            #- echo "$artIp:$artPort"
+            - docker tag app:latest $int_art_username/app:$STEP_ID
             - docker push $artIp:$artPort/demo/app:$STEP_ID
 
       - name: job2
