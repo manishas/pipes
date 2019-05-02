@@ -35,6 +35,7 @@ pipelines:
         execution:
           onExecute:
             - pushd $res_app_resourcePath/gitRepo
+            - echo $STEP_ID
             - docker build -t app:$STEP_ID .
             - write_output app_img "imageTag=$STEP_ID"
         outputResources:
