@@ -9,7 +9,7 @@ resources:
     initialVersion:
       sha: master
 
-  - name: imageName
+  - name: app_img
     type: image
     imageName: manishas/app_img
     configuration:
@@ -35,24 +35,28 @@ pipelines:
         execution:
           onExecute:
             - pushd $res_app_resourcePath/gitRepo
-            - docker build -t app:latest .
+            - docker build -t app:$STEP_ID .
+            - write_output app_img "imageTag=$STEP_ID"
+        outputResources:
+          - app_img
 
-      - name: test
-        type: bash
-        setup:
-          runtime:
-            type: image
-            image:
-             custom:
-               name: drydock/u16all
-               tag: master
-        triggeredBy:
-          steps:
-            - build
-        execution:
-          onExecute:
-            - docker run --name "test_app" app:latest bash -c "pwd"
-            - docker rm -fv "test_app"
+
+      # - name: test
+      #   type: bash
+      #   setup:
+      #     runtime:
+      #       type: image
+      #       image:
+      #        custom:
+      #          name: drydock/u16all
+      #          tag: master
+      #   triggeredBy:
+      #     steps:
+      #       - build
+      #   execution:
+      #     onExecute:
+      #       - docker run --name "test_app" app:latest bash -c "pwd"
+      #       - docker rm -fv "test_app"
 
       - name: push
         type: bash
@@ -64,19 +68,19 @@ pipelines:
                name: drydock/u16all
                tag: master
         triggeredBy:
-          steps:
-            - test
+          resources:
+            - app_img
         execution:
           onExecute:
-            - echo $int_art_username
-            - echo $int_art_password
-            - echo $int_art_url
-            - docker login -u $int_art_username -p $int_art_password $int_art_url
+            - echo $res_app_img_int_username
+            - echo $res_app_img_int_password
+            - echo $res_app_img_int_url
+            - docker login -u $res_app_img_int_username -p $res_app_img_int_password $res_app_img_int_url
             #- artIp=$(echo $int_art_url | awk -F[/:] '{print $4}')
             #- artPort=$(echo $int_art_url | awk -F[/:] '{print $5}')
             #- echo "$artIp:$artPort"
-            - docker tag app:latest $int_art_username/app:$STEP_ID
-            - docker push $artIp:$artPort/demo/app:$STEP_ID
+            - docker tag app:$res_app_img_imagetag $res_app_img_int_username/app:$STEP_ID
+            - docker push $res_app_img_int_username/app:$STEP_ID
 
       - name: job2
         type: bash
