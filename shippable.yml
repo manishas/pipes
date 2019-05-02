@@ -39,7 +39,7 @@ pipelines:
           onExecute:
             - pushd $res_app_resourcePath/gitRepo
             - echo $IMG_TAG
-            - IMG_TAG=$IMG_TAG+1
+            - export IMG_TAG=$(($IMG_TAG+1))
             - add_run_variable imgTag=$IMG_TAG
             - echo $imgTag
             - docker build -t app:$IMG_TAG .
