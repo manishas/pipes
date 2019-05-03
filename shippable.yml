@@ -23,9 +23,6 @@ pipelines:
       - name: build
         type: bash
         setup:
-          environmentVariables:
-            normal:
-              IMG_TAG: 0
           runtime:
             type: image
             image:
@@ -38,12 +35,12 @@ pipelines:
         execution:
           onExecute:
             - pushd $res_app_resourcePath/gitRepo
-            - echo $IMG_TAG
-            - export IMG_TAG=$(($IMG_TAG+1))
-            - add_run_variable imgTag=$IMG_TAG
-            - echo $imgTag
-            - docker build -t app:$IMG_TAG .
-            - write_output app_img "imageTag=$IMG_TAG"
+            #- echo $IMG_TAG
+            #- export IMG_TAG=$(($IMG_TAG+1))
+            - add_run_variable imgTag=$STEP_ID
+            #- echo $imgTag
+            - docker build -t app:$STEP_ID .
+            #- write_output app_img "imageTag=$IMG_TAG"
         outputResources:
           - app_img
 
@@ -86,7 +83,7 @@ pipelines:
             #- artIp=$(echo $int_art_url | awk -F[/:] '{print $4}')
             #- artPort=$(echo $int_art_url | awk -F[/:] '{print $5}')
             #- echo "$artIp:$artPort"
-            - docker tag app:$res_app_img_imagetag $res_app_img_int_username/app:$imgTag
+            #- docker tag app:$res_app_img_imagetag $res_app_img_int_username/app:$imgTag
             - docker push $res_app_img_int_username/app:$imgTag
 
       - name: job2
