@@ -10,14 +10,14 @@ resources:
       sha: master
 
   - name: doc
-      type: image
-      imageName: foo/avinci
-      configuration:
-        integrationName: doc
-        region: us-east-1
-        autoPull: false
-      initialVersion:
-        imageTag: master
+    type: image
+    imageName: foo/avinci
+    configuration:
+      integrationName: doc
+      region: us-east-1
+      autoPull: false
+    initialVersion:
+      imageTag: master
 
 pipelines:
   - name: ci_pipeline
@@ -97,4 +97,5 @@ pipelines:
         execution:
           onExecute:
             - echo "job2...."
-
+            - echo $res_doc_autoPull
+            - echo $res_doc_region
