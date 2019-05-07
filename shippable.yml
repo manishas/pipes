@@ -19,21 +19,14 @@ resources:
 #    configuration:
 #      integrationName: gcp
 
-  - name: gcpImg
-    type: image
-    imageName: imageRepo/imageName
-    configuration:
-      integrationName: gcp
-    initialVersion:
-      imageTag: latest
-
   - name: docImg
     type: image
     imageName: imageRepo/imageName
     configuration:
-      integrationName: qwerty
+      integrationName: aws
     initialVersion:
       imageTag: latest
+      region: us-east-1
 
 pipelines:
   - name: ci_pipeline
@@ -110,7 +103,6 @@ pipelines:
             - build
         requires:
           resources:
-            - gcpImg
             - docImg
         execution:
           onExecute:
