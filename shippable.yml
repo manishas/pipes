@@ -9,11 +9,11 @@ resources:
     initialVersion:
       sha: master
 
-#  - name: azCluster
-#    type: cluster
-#    configuration:
-#      integrationName: azure
-#
+  - name: azCluster
+    type: cluster
+    configuration:
+      integrationName: azure
+
 #  - name: gcpCluster
 #    type: cluster
 #    configuration:
