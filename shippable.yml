@@ -31,7 +31,7 @@ resources:
     type: image
     imageName: imageRepo/imageName
     configuration:
-      integrationName: art
+      integrationName: docker1
     initialVersion:
       imageTag: latest
 
