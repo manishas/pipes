@@ -25,9 +25,9 @@ resources:
     configuration:
       integrationName: aws
       autoPull: false
+      region: us-east-1
     initialVersion:
       imageTag: latest
-      region: us-east-1
 
 pipelines:
   - name: ci_pipeline
