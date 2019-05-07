@@ -9,6 +9,11 @@ resources:
     initialVersion:
       sha: master
 
+  - name: azCluster
+    type: cluster
+    configuration:
+      integrationName: azure
+
 pipelines:
   - name: ci_pipeline
     steps:
@@ -79,10 +84,13 @@ pipelines:
              custom:
                name: drydock/u16all
                tag: master
-
         triggeredBy:
           steps:
             - build
+        requires:
+          resources:
+            - azCluster
         execution:
           onExecute:
             - echo "job2...."
+            - printenv
