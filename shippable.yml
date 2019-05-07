@@ -25,7 +25,15 @@ resources:
     configuration:
       integrationName: gcp
     initialVersion:
-      imageTag: <string>
+      imageTag: latest
+
+  - name: docImg
+    type: image
+    imageName: imageRepo/imageName
+    configuration:
+      integrationName: docker
+    initialVersion:
+      imageTag: latest
 
 pipelines:
   - name: ci_pipeline
@@ -103,6 +111,7 @@ pipelines:
         requires:
           resources:
             - gcpImg
+            - docImg
         execution:
           onExecute:
             - echo "job2...."
