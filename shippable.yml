@@ -115,4 +115,6 @@ pipelines:
         execution:
           onExecute:
             - echo "job2...."
-            - printenv
+            #- printenv
+            - echo $res_gcpImg_int_masterName
+            - echo $res_docImg_int_masterName
