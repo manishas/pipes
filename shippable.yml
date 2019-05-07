@@ -24,6 +24,7 @@ resources:
     imageName: imageRepo/imageName
     configuration:
       integrationName: aws
+      autoPull: false
     initialVersion:
       imageTag: latest
       region: us-east-1
