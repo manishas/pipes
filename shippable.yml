@@ -85,5 +85,4 @@ pipelines:
         execution:
           onExecute:
             - echo "job2...."
-            - printenv | grep docImg
 
