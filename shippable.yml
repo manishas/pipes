@@ -14,6 +14,19 @@ resources:
     configuration:
       integrationName: azure
 
+  - name: gcpCluster
+    type: cluster
+    configuration:
+      integrationName: gcp
+
+  - name: gcpImg
+    type: image
+    imageName: imageRepo/imageName
+    configuration:
+      integrationName: gcp
+    initialVersion:
+      imageTag: <string>
+
 pipelines:
   - name: ci_pipeline
     steps:
