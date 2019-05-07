@@ -108,11 +108,10 @@ pipelines:
         triggeredBy:
           steps:
             - build
-          resources:
-            - docImg
         requires:
           resources:
             - gcpImg
+            - docImg
         execution:
           onExecute:
             - echo "job2...."
