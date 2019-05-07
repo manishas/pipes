@@ -26,7 +26,7 @@ pipelines:
             - app
         execution:
           onExecute:
-            - pushd $res_app_resourcePath/gitRepo
+            - pushd $res_app_resourcePath
             - docker build -t app:latest .
 
       - name: test
