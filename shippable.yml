@@ -9,15 +9,15 @@ resources:
     initialVersion:
       sha: master
 
-  - name: azCluster
-    type: cluster
-    configuration:
-      integrationName: azure
-
-  - name: gcpCluster
-    type: cluster
-    configuration:
-      integrationName: gcp
+#  - name: azCluster
+#    type: cluster
+#    configuration:
+#      integrationName: azure
+#
+#  - name: gcpCluster
+#    type: cluster
+#    configuration:
+#      integrationName: gcp
 
   - name: gcpImg
     type: image
@@ -102,7 +102,7 @@ pipelines:
             - build
         requires:
           resources:
-            - azCluster
+            - gcpImg
         execution:
           onExecute:
             - echo "job2...."
