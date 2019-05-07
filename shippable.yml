@@ -8,11 +8,11 @@ resources:
         only: master
     initialVersion:
       sha: master
-
-  - name: azCluster
-    type: cluster
-    configuration:
-      integrationName: azure
+#
+#  - name: azCluster
+#    type: cluster
+#    configuration:
+#      integrationName: azure
 
 #  - name: gcpCluster
 #    type: cluster
@@ -108,10 +108,11 @@ pipelines:
         triggeredBy:
           steps:
             - build
+          resources:
+            - docImg
         requires:
           resources:
             - gcpImg
-            - docImg
         execution:
           onExecute:
             - echo "job2...."
