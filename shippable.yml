@@ -13,8 +13,7 @@ resources:
     type: image
     imageName: foo/avinci
     configuration:
-      integrationName: doc
-      region: us-east-1
+      integrationName: gcp
       autoPull: false
     initialVersion:
       imageTag: master
@@ -99,3 +98,4 @@ pipelines:
             - echo "job2...."
             - echo $res_doc_autoPull
             - echo $res_doc_region
+
