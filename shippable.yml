@@ -97,5 +97,5 @@ pipelines:
           onExecute:
             - echo "job2...."
             - echo $res_doc_autoPull
-            - echo $res_doc_region
+            - printenv | grep res_doc
 
