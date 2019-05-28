@@ -45,9 +45,16 @@ pipelines:
         requires:
           integrations:
             - art
+            - notifySlack
           resources:
             - app
             - npmSource
+        execution:
+          onSuccess:
+            - send_notification notifySlack --text "built docker image 34.66.110.173:8081/docker-local/demo with tag $PIPELINE_NAME.$RUN_NUMBER"
+          onFailure:
+            - send_notification notifySlack --text "could not build docker image 34.66.110.173:8081/docker-local/demo with tag $PIPELINE_NAME.$RUN_NUMBER"
+
 
       - name: pushDockerImg
         type: push
@@ -70,9 +77,15 @@ pipelines:
         requires:
           integrations:
             - art
+            - notifySlack
         triggeredBy:
           steps:
             - pushDockerImg
+        execution:
+          onSuccess:
+            - send_notification notifySlack --text "pushed build info for buildName=$res_bldInfo_buildName buildNumber=$res_promotedBld_buildNumber"
+          onFailure:
+            - send_notification notifySlack --text "could not promote buildName=$res_bldInfo_buildName buildNumber=$res_promotedBld_buildNumber"
         outputResources:
           - bldInfo
 
@@ -86,8 +99,14 @@ pipelines:
         requires:
           integrations:
             - art
+            - notifySlack
         triggeredBy:
           resources:
             - bldInfo
+        execution:
+          onSuccess:
+            - send_notification notifySlack --text "promoted buildName=$res_promotedBld_buildName buildNumber=$res_promotedBld_buildNumber to demo"
+          onFailure:
+            - send_notification notifySlack --text "could not promote buildName=$res_promotedBld_buildName buildNumber=$res_promotedBld_buildNumber to demo"
         outputResources:
           - promotedBld
