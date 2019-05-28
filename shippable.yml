@@ -6,7 +6,7 @@ resources:
       integrationName: manishas_github
       branches:
         only: master
-    initialVersion:
+    version:
       sha: master
 
   - name: npmSource
