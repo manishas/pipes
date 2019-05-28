@@ -42,3 +42,45 @@ pipelines:
           resources:
             - app
             - npmSource
+
+      - name: pushDockerImg
+        type: push
+        configuration:
+          affinityGroup: root
+        setup:
+          push:
+            targetRepo: docker-local
+        requires:
+          integrations:
+            - art
+        triggeredBy:
+          steps:
+            - dockerBuild
+
+      - name: publishBldInfo
+        type: publish
+        configuration:
+          affinityGroup: root
+        requires:
+          integrations:
+            - art
+        triggeredBy:
+          steps:
+            - pushDockerImg
+        outputResources:
+          - bldInfo
+
+      - name: promoteBld
+        type: promote
+        configuration:
+          affinityGroup: root
+        setup:
+          promote:
+            targetRepo: demo
+        requires:
+          integrations:
+            - art
+        triggeredBy:
+          resources:
+            - bldInfo
+                  
