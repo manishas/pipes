@@ -22,6 +22,12 @@ resources:
       buildName: native_pipeline
       buildNumber: 1
 
+  - name: promotedBld
+    type: buildInfo
+    version:
+      buildName: native_pipeline
+      buildNumber: 1
+
 pipelines:
   - name: native_pipeline
     steps:
@@ -83,4 +89,5 @@ pipelines:
         triggeredBy:
           resources:
             - bldInfo
-                  
+        outputResources:
+          - promotedBld
