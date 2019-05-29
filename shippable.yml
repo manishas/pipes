@@ -90,9 +90,9 @@ pipelines:
             - pushDockerImg
         execution:
           onSuccess:
-            - send_notification notifySlack --text "pushed build info for buildName=$res_bldInfo_buildName buildNumber=$res_bldInfo_buildNumber"
+            - send_notification notifySlack --text "published build info for buildName=$dockerBuild_buildName buildNumber=$dockerBuild_buildNumber"
           onFailure:
-            - send_notification notifySlack --text "could not promote buildName=$res_bldInfo_buildName buildNumber=$res_promotedBld_buildNumber"
+            - send_notification notifySlack --text "could not publish buildName=$dockerBuild_buildName buildNumber=$dockerBuild_buildNumber"
         outputResources:
           - bldInfo
 
