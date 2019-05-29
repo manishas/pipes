@@ -51,9 +51,9 @@ pipelines:
             - npmSource
         execution:
           onSuccess:
-            - send_notification notifySlack --text "built docker image 34.66.110.173:8081/docker-local/demo with tag $PIPELINE_NAME.$RUN_NUMBER"
+            - send_notification notifySlack --text "built docker image 34.66.110.173:8081/docker-local/demo:$PIPELINE_NAME.$RUN_NUMBER"
           onFailure:
-            - send_notification notifySlack --text "could not build docker image 34.66.110.173:8081/docker-local/demo with tag $PIPELINE_NAME.$RUN_NUMBER"
+            - send_notification notifySlack --text "could not build docker image 34.66.110.173:8081/docker-local/demo:$PIPELINE_NAME.$RUN_NUMBER"
 
 
       - name: pushDockerImg
@@ -69,6 +69,12 @@ pipelines:
         triggeredBy:
           steps:
             - dockerBuild
+        execution:
+          onSuccess:
+            - send_notification notifySlack --text "pushed docker image 34.66.110.173:8081/docker-local/demo:$PIPELINE_NAME.$RUN_NUMBER"
+          onFailure:
+            - send_notification notifySlack --text "could not push docker image 34.66.110.173:8081/docker-local/demo:$PIPELINE_NAME.$RUN_NUMBER"
+
 
       - name: publishBldInfo
         type: publish
@@ -83,7 +89,7 @@ pipelines:
             - pushDockerImg
         execution:
           onSuccess:
-            - send_notification notifySlack --text "pushed build info for buildName=$res_bldInfo_buildName buildNumber=$res_promotedBld_buildNumber"
+            - send_notification notifySlack --text "pushed build info for buildName=$res_bldInfo_buildName buildNumber=$res_bldInfo_buildNumber"
           onFailure:
             - send_notification notifySlack --text "could not promote buildName=$res_bldInfo_buildName buildNumber=$res_promotedBld_buildNumber"
         outputResources:
