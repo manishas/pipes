@@ -117,3 +117,25 @@ pipelines:
             - send_notification notifySlack --text "could not promote buildName=$dockerBuild_buildName buildNumber=$dockerBuild_buildNumber to demo"
         outputResources:
           - promotedBld
+
+      - name: promoteBld111
+        type: promote
+        configuration:
+          affinityGroup: root
+        setup:
+          promote:
+            targetRepo: demo
+        requires:
+          integrations:
+            - art
+            - notifySlack
+        triggeredBy:
+          resources:
+            - bldInfo
+        execution:
+          onSuccess:
+            - send_notification notifySlack --text "promoted buildName=$dockerBuild_buildName buildNumber=$dockerBuild_buildNumber to demo"
+          onFailure:
+            - send_notification notifySlack --text "could not promote buildName=$dockerBuild_buildName buildNumber=$dockerBuild_buildNumber to demo"
+        outputResources:
+          - promotedBld
